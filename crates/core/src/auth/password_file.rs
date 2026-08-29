@@ -13,8 +13,6 @@
 
 use std::path::Path;
 
-use zeroize::Zeroize;
-
 use super::super::error::{CoreError, Result};
 
 /// Reads a master password from a file.

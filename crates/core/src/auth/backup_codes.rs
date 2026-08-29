@@ -7,7 +7,10 @@ use rand::RngCore;
 use sha2::{Digest, Sha256};
 use zeroize::Zeroize;
 
-use super::super::error::{CoreError, Result};
+use crate::error::CoreError;
+
+/// Type alias for Result with CoreError.
+type Result<T> = std::result::Result<T, CoreError>;
 
 /// Number of backup codes generated at init.
 pub const BACKUP_CODE_COUNT: usize = 8;
