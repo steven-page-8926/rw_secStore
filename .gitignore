@@ -1,7 +1,9 @@
 # Rust
 /target/
 **/*.rs.bk
-Cargo.lock
+# Cargo.lock is committed for application reproducibility (see ADR-001)
+# Remove this comment + uncomment below if rw_secStore becomes a library crate
+# Cargo.lock
 
 # IDE
 .idea/
