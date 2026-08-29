@@ -9,6 +9,7 @@
 //!   defaults (WAL, foreign keys, 0o600 file mode)
 //! - [`migrations`] — Schema migrations (additive only, transactional)
 //! - [`permissions`] — File permission management (0o600 DB, 0o700 dirs)
+//! - [`integrity`] — HMAC seal and per-row HMAC for tamper detection
 //! - [`error`] — Storage-specific error types
 
 #![deny(unsafe_code)]
@@ -19,11 +20,13 @@
 
 pub mod connection;
 pub mod error;
+pub mod integrity;
 pub mod migrations;
 pub mod permissions;
 
 pub use connection::open;
 pub use error::{Result, StorageError};
+pub use integrity::{compute_and_store_seal, verify_seal, SealHeader};
 pub use migrations::{current_version, rollback_last, run_migrations, CURRENT_SCHEMA_VERSION};
 
 #[cfg(test)]

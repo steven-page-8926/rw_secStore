@@ -6,12 +6,16 @@
 //! defined in the SPEC. It depends on `rw-secstore-crypto` and
 //! `rw-secstore-storage` and is consumed by `rw-secstore-cli`.
 //!
-//! ## Modules (Phase 1)
+//! ## Modules
 //!
 //! - [`error`] — Core error types
-//!
-//! Future phases will add: keystore, ca, ssh, auth, audit, config.
+//! - [`auth`] — Authentication: password input, keyring, backup codes, rate limiting
+//! - [`config`] — Configuration management (TOML, XDG)
+//! - [`audit`] — Audit logging for security-relevant operations
 
+pub mod audit;
+pub mod auth;
+pub mod config;
 pub mod error;
 
 pub use error::{CoreError, Result};
