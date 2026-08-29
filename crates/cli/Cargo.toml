@@ -1,0 +1,44 @@
+[package]
+name = "rw-secstore"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "CLI binary for rw-secstore"
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "rw-secstore"
+path = "src/main.rs"
+
+[dependencies]
+rw-secstore-core = { path = "../core" }
+rw-secstore-crypto = { path = "../crypto" }
+rw-secstore-storage = { path = "../storage" }
+
+anyhow = { workspace = true }
+base64 = { workspace = true }
+chrono = { workspace = true }
+clap = { workspace = true }
+clap_mangen = { workspace = true }
+directories = { workspace = true }
+hex = { workspace = true }
+indicatif = { workspace = true }
+rpassword = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+signal-hook = { workspace = true }
+thiserror = { workspace = true }
+toml = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+uuid = { workspace = true }
+zeroize = { workspace = true }
+
+[dev-dependencies]
+assert_cmd = { workspace = true }
+predicates = { workspace = true }
+tempfile = { workspace = true }

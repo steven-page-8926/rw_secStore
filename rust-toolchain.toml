@@ -1,0 +1,6 @@
+[toolchain]
+# MSRV is 1.75+, but actual development environment has 1.98.0.
+# Use stable for consistent builds across the team.
+channel = "stable"
+components = ["rustfmt", "clippy", "rust-src"]
+profile = "minimal"

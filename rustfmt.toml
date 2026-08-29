@@ -1,0 +1,40 @@
+# rustfmt configuration for rw-secstore
+# https://rust-lang.github.io/rustfmt/
+
+edition = "2021"
+version = "One"
+
+# Maximum line width
+max_width = 100
+
+# Use 4 spaces for tabs
+tab_spaces = 4
+hard_tabs = false
+
+# Format string literals
+format_strings = true
+format_macro_matchers = false
+format_macro_bodies = true
+
+# Import organization
+imports_granularity = "Crate"
+group_imports = "StdExternalCrate"
+reorder_imports = true
+reorder_modules = true
+
+# Trailing comma behavior
+trailing_comma = "Vertical"
+
+# Misc
+match_arm_blocks = false
+match_arm_leading_pipes = "Preserve"
+use_small_heuristics = "Default"
+merge_derives = true
+remove_nested_parens = true
+normalize_comments = true
+normalize_doc_attributes = true
+
+# Error reporting
+error_on_unformatted = true
+report_todo = "Never"
+report_fixme = "Never"

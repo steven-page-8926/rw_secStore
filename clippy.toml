@@ -1,0 +1,18 @@
+# Clippy configuration for rw-secstore
+# https://github.com/rust-lang/rust-clippy
+
+# Cognitive complexity threshold (warn above 30)
+cognitive-complexity-threshold = 30
+
+# Maximum number of arguments (warn above 7)
+too-many-arguments-threshold = 7
+
+# Maximum lines per function (warn above 200)
+too-many-lines-threshold = 200
+
+# Type complexity threshold (warn above 250)
+type-complexity-threshold = 250
+
+# Standard thresholds
+array-size-threshold = 512
+vec-box-size-threshold = 512

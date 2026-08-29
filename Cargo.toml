@@ -1,89 +1,120 @@
-[package]
-name = "rw_secstore"
+[workspace]
+resolver = "2"
+members = [
+    "crates/cli",
+    "crates/core",
+    "crates/crypto",
+    "crates/storage",
+]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2021"
+rust-version = "1.75"
 license = "MIT"
-description = "RapidWebs Secure Store - Enterprise-grade secrets management and key storage"
-repository = "https://github.com/rapidwebs/rw_secStore"
-documentation = "https://docs.rapidwebs.org/rw_secstore"
-homepage = "https://rapidwebs.org/rw_secstore"
-keywords = ["security", "secrets", "keys", "hsm", "pki", "enterprise"]
-categories = ["security", "cryptography", "system-tools"]
-authors = ["RapidWebs <team@rapidwebs.org>"]
+authors = ["RapidWebs Engineering"]
+description = "Minimal, enterprise-grade secure keystore and certificate authority"
 
-[lib]
-name = "rw_secstore"
-path = "src/lib.rs"
+# Workspace lints - applied to all crates
+[workspace.lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+unimplemented = "deny"
+dbg_macro = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+must_use_candidate = "warn"
+redundant_clone = "warn"
+needless_collect = "warn"
+or_fun_call = "warn"
 
-[[bin]]
-name = "rw_secstore"
-path = "src/main.rs"
+[workspace.lints.rust]
+unsafe_code = "deny"
+unsafe_op_in_unsafe_fn = "deny"
+missing_docs = "warn"
 
-[dependencies]
-# Core
-tokio = { version = "1.38", features = ["full"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-thiserror = "1.0"
+[workspace.dependencies]
+# Workspace dependencies (members reference these via `crate.workspace = true`)
+# Sorted alphabetically for consistency
+
+# Core utilities
+anyhow = { version = "1", features = ["std"] }
+base64 = "0.22"
+chrono = { version = "0.4", default-features = false, features = ["clock", "serde"] }
+clap = { version = "4.5", features = ["derive", "env", "string"] }
+clap_mangen = "0.2"
+directories = "5"
+hex = "0.4"
+indicatif = "0.17"
+qrcode = "0.14"
+rand = "0.8"
+# (reqwest is declared per-crate, not as workspace dep, due to optionality)
+rpassword = "7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+signal-hook = "0.3"
+thiserror = "1"
+toml = "0.8"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
-clap = { version = "4.5", features = ["derive", "env"] }
-config = "0.14"
-async-trait = "0.1"
-chrono = { version = "0.4", features = ["serde"] }
-uuid = { version = "1.8", features = ["serde", "v4"] }
-subtle = "2.5"
+uuid = { version = "1", features = ["v7", "serde"] }
+zeroize = { version = "1.8", features = ["derive"] }
 
-# Cryptography
-ring = "0.17"
+# Crypto (pure Rust)
 aes-gcm = "0.10"
-ed25519-dalek = "2.0"
-x25519-dalek = "2.0"
 argon2 = "0.5"
-rand = { version = "0.8", features = ["std"] }
-zeroize = { version = "1.7", features = ["derive"] }
-secrecy = "0.10"
+chacha20poly1305 = "0.10"
+hkdf = "0.12"
+hmac = "0.12"
+sha2 = "0.10"
+subtle = "2.6"
+zxcvbn = "3"
+
+# SSH
+ssh-key = { version = "0.6", features = ["ed25519", "rsa", "ecdsa"] }
+
+# X.509
+rcgen = "0.13"
+x509-parser = "0.16"
+der-parser = "9"
+asn1-rs = "0.7"
+pem = "3"
+pkcs12 = "0.6"
+
+# OS Keyring
+keyring = { version = "3", features = ["apple-native", "windows-native", "sync-secret-service"] }
 
 # Storage
-sled = { version = "0.34", features = ["async"] }
-rocksdb = { version = "0.21", optional = true }
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite", "migrate"], optional = true }
+rusqlite = { version = "0.32", features = ["bundled", "modern_sqlite"] }
 
-# Network
-tonic = { version = "0.11", features = ["tls", "transport"] }
-prost = "0.12"
-hyper = { version = "1.0", features = ["full", "http2"] }
-reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
-axum = { version = "0.7", features = ["macros", "json", "ws"] }
-tower = "0.4"
-tower-http = { version = "0.5", features = ["cors", "trace"] }
+# Dev dependencies
+criterion = { version = "0.5", features = ["html_reports"] }
+tempfile = "3"
+assert_cmd = "2"
+predicates = "3"
+proptest = "1"
 
-# Observability
-metrics = "0.21"
-metrics-exporter-prometheus = "0.13"
-
-[dev-dependencies]
-tokio-test = "0.4"
-proptest = "1.0"
-tempfile = "3.8"
-wiremock = "0.5"
-
-[features]
-default = ["sqlite"]
-sqlite = ["sqlx/sqlite"]
-postgres = ["sqlx/postgres"]
-rocksdb = ["rocksdb"]
-hsm = ["pkcs11"]
-full = ["sqlite", "rocksdb", "hsm"]
-
+# Profile: optimized release for security-critical paths
 [profile.release]
-lto = true
+opt-level = 3
+lto = "thin"
 codegen-units = 1
+strip = "symbols"
+debug = false
 panic = "abort"
-strip = true
+incremental = false
 
+# Profile: dev with debug info
 [profile.dev]
+opt-level = 0
 debug = true
+incremental = true
 
-[workspace]
-members = []
+# Profile: bench for reproducible benchmarks
+[profile.bench]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+debug = false
