@@ -1,0 +1,59 @@
+# rw_secstore Configuration Example
+# Copy this file to /etc/rw_secstore/config.toml or ./config.toml and modify as needed
+
+[server]
+# Server bind address (0.0.0.0 for all interfaces, 127.0.0.1 for localhost only)
+bind_address = "0.0.0.0"
+
+# Server port
+port = 8443
+
+# Enable TLS (recommended for production)
+tls_enabled = false
+
+# TLS certificate and key paths (required if tls_enabled = true)
+# tls_cert_path = "/etc/rw_secstore/tls/cert.pem"
+# tls_key_path = "/etc/rw_secstore/tls/key.pem"
+
+[storage]
+# Storage backend: "sled", "rocksdb", "sqlite", "postgres"
+backend = "sled"
+
+# Database path for SQLite/Sled
+# database_path = "/var/lib/rw_secstore/db"
+
+# RocksDB path
+# rocksdb_path = "/var/lib/rw_secstore/rocksdb"
+
+# Connection pool size
+pool_size = 10
+
+[crypto]
+# Default encryption algorithm: "aes-256-gcm", "chacha20-poly1305"
+encryption_algorithm = "aes-256-gcm"
+
+# Default key derivation algorithm: "argon2id", "pbkdf2", "scrypt"
+kdf_algorithm = "argon2id"
+
+# Key rotation interval in days
+key_rotation_days = 90
+
+# HSM configuration (optional)
+# [crypto.hsm]
+# library_path = "/usr/lib/softhsm/libsofthsm2.so"
+# slot_id = 0
+# token_label = "rw_secstore"
+# user_pin = "1234"  # Should be set via RW_SECSTORE_CRYPTO__HSM__USER_PIN env var in production
+
+[audit]
+# Enable audit logging
+enabled = true
+
+# Log file path (optional, logs to stdout if not set)
+# log_path = "/var/log/rw_secstore/audit.log"
+
+# Log format: "json", "text", "syslog"
+format = "json"
+
+# Retention period in days
+retention_days = 365

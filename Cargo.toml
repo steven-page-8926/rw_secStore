@@ -1,0 +1,89 @@
+[package]
+name = "rw_secstore"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "RapidWebs Secure Store - Enterprise-grade secrets management and key storage"
+repository = "https://github.com/rapidwebs/rw_secStore"
+documentation = "https://docs.rapidwebs.org/rw_secstore"
+homepage = "https://rapidwebs.org/rw_secstore"
+keywords = ["security", "secrets", "keys", "hsm", "pki", "enterprise"]
+categories = ["security", "cryptography", "system-tools"]
+authors = ["RapidWebs <team@rapidwebs.org>"]
+
+[lib]
+name = "rw_secstore"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rw_secstore"
+path = "src/main.rs"
+
+[dependencies]
+# Core
+tokio = { version = "1.38", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+clap = { version = "4.5", features = ["derive", "env"] }
+config = "0.14"
+async-trait = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.8", features = ["serde", "v4"] }
+subtle = "2.5"
+
+# Cryptography
+ring = "0.17"
+aes-gcm = "0.10"
+ed25519-dalek = "2.0"
+x25519-dalek = "2.0"
+argon2 = "0.5"
+rand = { version = "0.8", features = ["std"] }
+zeroize = { version = "1.7", features = ["derive"] }
+secrecy = "0.10"
+
+# Storage
+sled = { version = "0.34", features = ["async"] }
+rocksdb = { version = "0.21", optional = true }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "sqlite", "migrate"], optional = true }
+
+# Network
+tonic = { version = "0.11", features = ["tls", "transport"] }
+prost = "0.12"
+hyper = { version = "1.0", features = ["full", "http2"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+axum = { version = "0.7", features = ["macros", "json", "ws"] }
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+
+# Observability
+metrics = "0.21"
+metrics-exporter-prometheus = "0.13"
+
+[dev-dependencies]
+tokio-test = "0.4"
+proptest = "1.0"
+tempfile = "3.8"
+wiremock = "0.5"
+
+[features]
+default = ["sqlite"]
+sqlite = ["sqlx/sqlite"]
+postgres = ["sqlx/postgres"]
+rocksdb = ["rocksdb"]
+hsm = ["pkcs11"]
+full = ["sqlite", "rocksdb", "hsm"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+
+[profile.dev]
+debug = true
+
+[workspace]
+members = []
